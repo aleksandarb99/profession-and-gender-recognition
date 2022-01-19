@@ -16,17 +16,22 @@ if __name__ == "__main__":
 
     # DETEKCIJA LICA
 
-    itest = load_image('test-images/4.jpg')
+    itest = load_image('test-images/3.jpg')
+
     itest = scale_to_normal_size(itest)
     scores = get_scores(itest)
     image = get_best_image(scores)
-    display_image(image[2])
+
+    image_colorful = cv2.cvtColor(cv2.imread("test-images/3.jpg"), cv2.COLOR_BGR2RGB)
+    image_colorful = scale_to_normal_size(image_colorful)
+
+    img_crop = image_colorful[image[1][0]:image[1][0] + image[3][1], image[1][1]:image[1][1] + image[3][0]]  # prva koordinata je po visini (formalno red), druga po širini (formalo kolona)\n"
+    display_image(img_crop)
 
     # KLASIFIKACIJA POLA
 
-    face = image[2]
     model = load_model("gender_model/model")
-    face_crop = cv2.resize(face, (96, 96))
+    face_crop = cv2.resize(img_crop, (96, 96))
     face_crop = face_crop.astype("float") / 255.0
     face_crop = img_to_array(face_crop)
     face_crop = np.expand_dims(face_crop, axis=0)

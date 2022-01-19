@@ -78,7 +78,6 @@ def process_image(image, clf, hog, step_size, window_size=(85, 105)):
 
 def get_best_image(scores):
     print('u get best image sam')
-    print(scores)
     max_score = 0
     max_score_tupple = None
     for score_tupple in scores:
@@ -107,5 +106,5 @@ def get_scores(itest):
     load_files()
     for x in clf_hog:
         score, score_window, w = process_image(itest, x[0], x[1], step_size=10, window_size=x[2])
-        scores.append((score, score_window, w))
+        scores.append((score, score_window, w, x[2]))
     return scores
