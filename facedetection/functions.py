@@ -6,14 +6,6 @@ from skimage import data, color
 from sklearn.datasets import fetch_lfw_people
 import numpy as np
 
-imgs_to_use = ['camera', 'text', 'coins', 'moon',
-                   'page', 'clock', 'immunohistochemistry',
-                   'chelsea', 'coffee', 'hubble_deep_field']
-images = [color.rgb2gray(getattr(data, name)())
-          for name in imgs_to_use]
-
-faces = fetch_lfw_people()
-positive_patches = faces.images
 
 # POMOCNE FUNKCIJE
 
@@ -39,6 +31,14 @@ def scale_to_normal_size(image):
       return cv2.resize(image, (h, 300))
 
 def get_hog(size):
+    imgs_to_use = ['camera', 'text', 'coins', 'moon',
+                   'page', 'clock', 'immunohistochemistry',
+                   'chelsea', 'coffee', 'hubble_deep_field']
+    images = [color.rgb2gray(getattr(data, name)())
+              for name in imgs_to_use]
+
+    faces = fetch_lfw_people()
+    positive_patches = faces.images
 
     img = positive_patches[0]
     img = cv2.resize(img, size)
@@ -77,7 +77,6 @@ def process_image(image, clf, hog, step_size, window_size=(85, 105)):
     return best_score, best_window, w
 
 def get_best_image(scores):
-    print('u get best image sam')
     max_score = 0
     max_score_tupple = None
     for score_tupple in scores:
@@ -104,7 +103,8 @@ def load_files():
 def get_scores(itest):
     scores = []
     load_files()
+    # TODO izbaciti w, ne treba
     for x in clf_hog:
         score, score_window, w = process_image(itest, x[0], x[1], step_size=10, window_size=x[2])
-        scores.append((score, score_window, w, x[2]))
+        scores.append((score, score_window, x[2], w))
     return scores
